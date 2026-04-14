@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import uuid
+import os
 
 # --- Page Config ---
 st.set_page_config(
@@ -198,7 +199,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Constants ---
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 DOMAIN_METADATA = {
     "zomato": {
@@ -229,6 +230,7 @@ if "selected_domain" not in st.session_state:
     st.session_state.selected_domain = "dpdp"
 
 # --- API Helpers ---
+@st.cache_data(ttl=10)
 def check_api_health():
     try:
         r = requests.get(f"{API_URL}/health", timeout=3)
