@@ -39,6 +39,52 @@ LLM Generation (Groq — LLaMA 3.1 8B)
 ↓
 Answer with Page Citations
 
+---
+
+## ☁️ Live Deployment
+
+**Live API:** https://multi-domain-rag-api-332613889772.asia-south1.run.app
+
+```bash
+# Health check
+curl https://multi-domain-rag-api-332613889772.asia-south1.run.app/health
+
+# Example query
+curl -X POST https://multi-domain-rag-api-332613889772.asia-south1.run.app/chat \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is RBI inflation forecast?", "domain": "rbi", "session_id": "demo"}'
+```
+
+### GCP Architecture
+
+| GCP Service | Purpose |
+|-------------|---------|
+| Artifact Registry | Stores Docker images |
+| Cloud Run | Serverless container hosting — scales to zero when idle |
+| GCS (Cloud Storage) | Stores ChromaDB vector store and query logs |
+| Secret Manager | Stores GROQ_API_KEY securely |
+| BigQuery | Analyses query logs |
+
+### Startup Flow
+On every Cold Start, Cloud Run:
+1. Pulls image from Artifact Registry
+2. Downloads ChromaDB from GCS
+3. Loads HuggingFace embedding model
+4. Starts serving requests
+
+---
+
+## 🔄 GCP → AWS Equivalents
+
+| GCP Service | AWS Equivalent | Purpose |
+|-------------|----------------|---------|
+| Cloud Run | AWS App Runner / ECS Fargate | Serverless container hosting |
+| Artifact Registry | Amazon ECR | Docker image storage |
+| Cloud Storage (GCS) | Amazon S3 | Object storage |
+| BigQuery | Amazon Redshift / Athena | Data warehouse / analytics |
+| Secret Manager | AWS Secrets Manager | Secret storage |
+| Cloud Logging | Amazon CloudWatch | Log management |
+
 ### Key Design Decisions
 
 **Why Hybrid Search?**
