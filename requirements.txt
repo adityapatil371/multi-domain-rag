@@ -14,3 +14,5 @@ python-dotenv
 pydantic
 streamlit
 requests
+google-cloud-storage
+google-cloud-bigquery==3.41.0
